@@ -713,7 +713,7 @@ static int rk_fb_wait_for_vsync_thread(void *data)
 	while (!kthread_should_stop()) {
 		ktime_t timestamp = dev_drv->vsync_info.timestamp;
 		int ret = wait_event_interruptible(dev_drv->vsync_info.wait,
-//phjanderson smooth video playback fix: //!ktime_equal(timestamp, dev_drv->vsync_info.timestamp) &&
+         !ktime_equal(timestamp, dev_drv->vsync_info.timestamp) && //phjanderson "smooth video playback fix": creates 100% usage on one CPU core due to process rk_fbvsync (on Linux, haven't tested Android)
 			dev_drv->vsync_info.active);
 
 		if (!ret) {
